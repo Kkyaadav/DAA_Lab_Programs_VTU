@@ -1,0 +1,80 @@
+import java.util.*;
+class PrimsAlgorithm {
+    private static int V;
+
+    static int minKey(int key[], Boolean visited[]) {
+        // Initialize min value
+        int min = Integer.MAX_VALUE, min_index = -1;
+
+        for (int v = 0; v < V; v++){
+            if (visited[v] == false && key[v] < min) { 
+                min = key[v];
+                min_index = v;
+            }
+        }
+        return min_index;
+    }
+
+    static void printMST(int parent[], int graph[][]) {
+        System.out.println("Edge \tWeight");
+        for (int i = 1; i < V; i++){
+            System.out.println(parent[i] + " - " + i + "\t" + graph[i][parent[i]]);
+        }
+    }
+
+    // Function to construct MST
+    static void primMST(int graph[][]) {
+        // Array to store constructeed MST
+        int parent[] = new int[V];
+        // to keep track on parent of cur node
+        int key[] = new int[V];
+        Boolean visited[] = new Boolean[V];
+
+        // Initialize all keys as INFINITE
+        Arrays.fill(key, Integer.MAX_VALUE);
+        // Initialize all visited to false
+        Arrays.fill(visited, false);
+        // pick source/first vertex
+        key[0] = 0;
+
+        // First node is always root of MST so its parent is none(-1)
+        parent[0] = -1;
+
+        // The MST will have V vertices
+        for (int count = 0; count < V - 1; count++) {
+
+            // Pick the minimum key vertex from the set of
+            // vertices not yet included in MST
+            int u = minKey(key, visited);
+
+            // Add the picked vertex to the MST Set
+            visited[u] = true;
+            //traverse the adjacent vertex of the picked vertices
+            for (int v = 0; v < V; v++){
+
+                if (graph[u][v] != 0 && visited[v] == false && graph[u][v] < key[v]) {
+                    parent[v] = u;
+                    key[v] = graph[u][v];
+                }
+            }
+        }
+
+        // Printing the constructed MST
+        printMST(parent, graph);
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter the no. of vertex:");
+        V = sc.nextInt();
+        int[][] graph = new int[V][V];
+        System.out.println("Enter the graph in MATRIX format:");
+        for (int i = 0; i < V; i++) {
+            for (int j = 0; j < V; j++) {
+                graph[i][j] = sc.nextInt();
+            }
+        }
+        // Printing the solution
+        primMST(graph);
+    }
+}
