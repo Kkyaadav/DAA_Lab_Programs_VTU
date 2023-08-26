@@ -1,0 +1,75 @@
+import java.util.Random;
+import java.util.Scanner;
+class MergeSort {
+    // function for conquer
+    public static void conquer(int[] arr, int si, int mid, int ei) {
+        int[] merged = new int[ei - si + 1];
+        int indx1 = si;
+        int indx2 = mid + 1;
+        int i = 0;// for traversing in merged array
+        while (indx1 <= mid && indx2 <= ei) {
+            if (arr[indx1] <= arr[indx2]) {
+                merged[i] = arr[indx1];
+                i++;
+                indx1++;
+            }else {
+                merged[i++] = arr[indx2++];
+            }
+        }
+        // storing the remaining left over elements
+        while (indx1 <= mid) {
+            merged[i++] = arr[indx1++];
+        }
+        // this is for 2nd half array
+        while (indx2 <= ei) {
+            merged[i++] = arr[indx2++];
+        }
+        // now store the sorted values in Original array
+        int k = si;// to keep th track of original array index
+        for (int e : merged) {
+            arr[k++] = e;// or we can write arr[k]=e; k++;
+        }
+
+    }
+
+    // function to divide the array
+    public static void divide(int[] arr, int si, int ei) {
+        if (si >= ei) {
+            return;
+        }
+        // calculating mid Position
+        int mid = si + (ei - si) / 2;
+        divide(arr, si, mid);
+        divide(arr, mid + 1, ei);
+        // calling conquer method to recombine array
+        conquer(arr, si, mid, ei);
+    }
+
+    public static void main(String[] args) {
+        System.out.println("Testing Successfull..!!");
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter the size of array:");
+        int n = sc.nextInt();
+        Random rand = new Random();
+        int[] arr = new int[n];
+        System.out.println("Data in original Array is:");
+        for (int i = 0; i < n; i++) {
+            arr[i] = rand.nextInt(100);
+        }
+        // displaying original data
+        for (int i : arr) {
+            System.out.print(i + " ");
+        }
+        System.out.println();
+        System.out.println("After sorting using merge sort:");
+        long startTime = System.currentTimeMillis();
+
+        divide(arr, 0, n - 1);
+        long endTime = System.currentTimeMillis();
+        for (int i : arr) {
+            System.out.print(i + " ");
+        }
+        System.out.println("\nTotal time taken for '" + n + "' instruction is" + (endTime - startTime) + "ms");
+
+    }
+}
