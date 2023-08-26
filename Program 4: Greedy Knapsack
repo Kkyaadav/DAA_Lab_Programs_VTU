@@ -1,0 +1,48 @@
+import java.util.Arrays;
+class Knapsack{
+    static double knap(int capacity,int[]weight,int[]value){
+        int n=weight.length;
+        double[]pw=new double[n];
+        for(int i=0;i<n;i++){
+            pw[i]=(double)value[i]/weight[i];
+        }
+        Integer indexArray[]=new Integer[n];
+        for(int i=0;i<n;i++){
+            indexArray[i]=i;
+        }
+        Arrays.sort(indexArray,(a,b)->Double.compare(pw[b],pw[a]));
+        int curw=0;
+        double totalV=0.0;
+        double[] frac=new double[n];
+        for(int i=0;i<n;i++){
+            int index=indexArray[i];
+            if(curw+weight[index]<=capacity){
+                totalV+=value[index];
+                frac[index]=1.0;
+                curw+=weight[index];
+            }else{
+                int rw=capacity-curw;
+                double f=(double)rw/weight[index];
+                totalV+=f*value[index];
+                frac[index]=f;
+                break;
+
+            }
+            
+        }
+        System.out.println("Portion of weight taken for each item:");
+        for (int i = 0; i < n; i++) {
+            System.out.printf("Item %d: %.2f\n", i + 1, frac[i]);
+        }
+        return totalV;
+
+    }
+    public static void main(String[] args) {
+        int capacity = 15;
+        int[] weights = {2,3,5,7,1,4,1};
+        int[] values = {10,5,15,7,6,18,3};
+        double maxValue = knap(capacity, weights, values);
+        System.out.println("Maximum value that can be obtained: " + maxValue);
+        
+    }
+}
