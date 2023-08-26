@@ -1,0 +1,74 @@
+import java.util.*;
+/*NOTE:
+ * please use '0' for marking Infinity
+ */
+public class DijkstrasAlgorithm {
+    static int n;
+    
+    static int minDistance(int dist[], boolean visited[]) {
+        int min = Integer.MAX_VALUE;
+        int min_index = -1;
+        for (int v = 0; v < n; v++) {
+            if (!visited[v] && dist[v] <= min) {
+                min = dist[v];
+                min_index = v;
+            }
+        }
+        return min_index;
+    }
+
+    static void printPath(int parent[], int j) {
+        if (parent[j] == -1) {
+            System.out.print(j + " ");
+            return;
+        }
+        printPath(parent, parent[j]);
+        System.out.print("->"+j + " ");
+    }
+
+    static void dijkstras(int[][] graph, int s) {
+        int[] dist = new int[n];
+        Arrays.fill(dist, Integer.MAX_VALUE);
+        boolean[] visited = new boolean[n];
+        Arrays.fill(visited, false);
+        int[] parent = new int[n];
+        Arrays.fill(parent, -1);
+        dist[s] = 0;
+
+        for (int i = 0; i < n - 1; i++) {
+            int u = minDistance(dist, visited);
+            visited[u] = true;
+
+            for (int v = 0; v < n; v++) {
+                if (!visited[v] && graph[u][v] != 0 && dist[u] != Integer.MAX_VALUE && dist[u] + graph[u][v] < dist[v]) {
+                    dist[v] = dist[u] + graph[u][v];
+                    parent[v] = u;
+                }
+            }
+        }
+
+        System.out.println("Vertex\tDistance\tPath");
+        for (int i = 0; i < n; i++) {
+            System.out.print(i + "\t" + dist[i] + "\t\t");
+            printPath(parent, i);
+            System.out.println();
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter the number of vertices:");
+        n = sc.nextInt();
+        int[][] graph = new int[n][n];
+        System.out.println("Enter the Graph in MATRIX format:");
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                graph[i][j] = sc.nextInt();
+            }
+        }
+        System.out.println("Enter the source vertex:");
+        int s = sc.nextInt();
+        System.out.println("Input accepted...!!");
+        dijkstras(graph, s);
+    }
+}
